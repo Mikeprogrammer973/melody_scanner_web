@@ -22,7 +22,7 @@ const elements = {
 let transcriptionModel;
 let wavesurfer;
 
-// 1. Inicialização do Aplicativo
+// Inicialização do Aplicativo
 async function initializeApp() {
   try {
     updateUIState('initializing');
@@ -53,7 +53,7 @@ async function initializeApp() {
   }
 }
 
-// 2. Configuração do TensorFlow
+// Configuração do TensorFlow
 async function initializeTensorFlow() {
   // try {
   //   updateStatus('Configurando TensorFlow...');
@@ -65,7 +65,7 @@ async function initializeTensorFlow() {
   // }
 }
 
-// 3. Carregamento do Modelo
+// Carregamento do Modelo
 async function loadTranscriptionModel() {
   updateStatus('Carregando modelo...');
   
@@ -81,15 +81,10 @@ async function loadTranscriptionModel() {
   }
 }
 
-// 4. Processamento de Áudio
+// Processamento de Áudio
 async function processAudioFile(audioFile) {
   try {
     updateUIState('processing');
-    
-    // Verifica tamanho do arquivo
-    if (audioFile.size > 5 * 1024 * 1024) {
-      // throw new Error('Arquivo muito grande (limite: 5MB)');
-    }
     
     // Carrega visualização de onda
     wavesurfer.load(URL.createObjectURL(audioFile));
@@ -117,7 +112,7 @@ async function processAudioFile(audioFile) {
   }
 }
 
-// 5. Geração de Arquivo MIDI
+// Geração de Arquivo MIDI
 async function generateMidiFile(transcription) {
   try {
     const midiBytes = mm.sequenceProtoToMidi(transcription);
@@ -128,7 +123,7 @@ async function generateMidiFile(transcription) {
   }
 }
 
-// 6. Preparação do Download
+// Preparação do Download
 function prepareDownload(midiBlob, originalFilename) {
   const filename = originalFilename.replace(/\.[^/.]+$/, '') + '.mid';
   elements.downloadBtn.href = URL.createObjectURL(midiBlob);
