@@ -88,7 +88,7 @@ async function processAudioFile(audioFile) {
     
     // Verifica tamanho do arquivo
     if (audioFile.size > 5 * 1024 * 1024) {
-      throw new Error('Arquivo muito grande (limite: 5MB)');
+      // throw new Error('Arquivo muito grande (limite: 5MB)');
     }
     
     // Carrega visualização de onda
