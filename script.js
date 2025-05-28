@@ -1,11 +1,9 @@
-// Configurações
 const MODEL_CONFIG = {
   modelType: 'onsets_frames',
   checkpointURL: 'https://storage.googleapis.com/magentadata/js/checkpoints/transcription/onsets_frames_uni',
   quantizationSteps: 4
 };
 
-// Elementos da UI
 const elements = {
   audioInput: document.getElementById('audioInput'),
   processBtn: document.getElementById('processBtn'),
@@ -18,22 +16,17 @@ const elements = {
   errorAlert: document.getElementById('errorAlert')
 };
 
-// Variáveis globais
 let transcriptionModel;
 let wavesurfer;
 
-// Inicialização do Aplicativo
 async function initializeApp() {
   try {
     updateUIState('initializing');
     
-    // Configura TensorFlow.js
     await initializeTensorFlow();
     
-    // Carrega modelo de transcrição
     transcriptionModel = await loadTranscriptionModel();
     
-    // Configura visualizador de áudio
     wavesurfer = WaveSurfer.create({
       container: elements.waveform,
       waveColor: '#4a6bff',
@@ -53,7 +46,6 @@ async function initializeApp() {
   }
 }
 
-// Configuração do TensorFlow
 async function initializeTensorFlow() {
   // try {
   //   updateStatus('Configurando TensorFlow...');
@@ -65,11 +57,9 @@ async function initializeTensorFlow() {
   // }
 }
 
-// Carregamento do Modelo
 async function loadTranscriptionModel() {
   updateStatus('Carregando modelo...');
   
-  // Versão alternativa que evita o erro "d is not a function"
   const model = new mm.OnsetsAndFrames(MODEL_CONFIG.checkpointURL);
   
   try {
@@ -81,26 +71,20 @@ async function loadTranscriptionModel() {
   }
 }
 
-// Processamento de Áudio
 async function processAudioFile(audioFile) {
   try {
     updateUIState('processing');
     
-    // Carrega visualização de onda
     wavesurfer.load(URL.createObjectURL(audioFile));
     
-    // Processa o áudio
     updateStatus('Analisando áudio...');
     const transcription = await transcriptionModel.transcribeFromAudioFile(audioFile);
     
-    // Converte para MIDI
     updateStatus('Gerando arquivo MIDI...');
     const midiBlob = await generateMidiFile(transcription);
     
-    // Prepara download
     prepareDownload(midiBlob, audioFile.name);
     
-    // Mostra resultados
     elements.audioPreview.src = URL.createObjectURL(audioFile);
     elements.resultSection.style.display = 'block';
     updateUIState('completed');
@@ -112,7 +96,6 @@ async function processAudioFile(audioFile) {
   }
 }
 
-// Geração de Arquivo MIDI
 async function generateMidiFile(transcription) {
   try {
     const midiBytes = mm.sequenceProtoToMidi(transcription);
@@ -123,7 +106,6 @@ async function generateMidiFile(transcription) {
   }
 }
 
-// Preparação do Download
 function prepareDownload(midiBlob, originalFilename) {
   const filename = originalFilename.replace(/\.[^/.]+$/, '') + '.mid';
   elements.downloadBtn.href = URL.createObjectURL(midiBlob);
@@ -131,7 +113,6 @@ function prepareDownload(midiBlob, originalFilename) {
   elements.downloadBtn.style.display = 'block';
 }
 
-// Funções Auxiliares de UI
 function updateUIState(state) {
   switch (state) {
     case 'initializing':
@@ -172,7 +153,6 @@ function showError(message) {
   }, 5000);
 }
 
-// Event Listeners
 elements.audioInput.addEventListener('change', (e) => {
   if (e.target.files.length > 0) {
     elements.resultSection.style.display = 'none';
@@ -188,5 +168,4 @@ elements.processBtn.addEventListener('click', async () => {
   }
 });
 
-// Inicialização
 document.addEventListener('DOMContentLoaded', initializeApp);
